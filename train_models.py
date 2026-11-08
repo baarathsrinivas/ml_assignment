@@ -6,7 +6,6 @@ import sys
 import joblib
 import pandas as pd
 from sklearn.compose import ColumnTransformer
-from sklearn.impute import SimpleImputer
 from sklearn.metrics import (
     accuracy_score,
     f1_score,
@@ -23,6 +22,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
+from imputers import DataFrameImputer
 
 
 DATA_PATH = Path("data/mushrooms.csv")
@@ -52,7 +52,7 @@ def coerce_numeric_columns(features: pd.DataFrame) -> pd.DataFrame:
 def build_numeric_pipeline() -> Pipeline:
     return Pipeline(
         [
-            ("imputer", SimpleImputer(strategy="median", keep_empty_features=True)),
+            ("imputer", DataFrameImputer(strategy="median")),
             ("scaler", StandardScaler()),
         ]
     )
@@ -61,10 +61,7 @@ def build_numeric_pipeline() -> Pipeline:
 def build_categorical_pipeline() -> Pipeline:
     return Pipeline(
         [
-            (
-                "imputer",
-                SimpleImputer(strategy="most_frequent", keep_empty_features=True),
-            ),
+            ("imputer", DataFrameImputer(strategy="most_frequent")),
             ("encoder", OneHotEncoder(handle_unknown="ignore")),
         ]
     )
