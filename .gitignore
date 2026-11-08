@@ -1,0 +1,8 @@
+.github/
+data/data_summary.md
+__pycache__/
+.pytest_cache
+.venv/
+uv.lock
+pycache/
+pyproject.toml
