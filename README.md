@@ -46,17 +46,17 @@ The models were trained using an 80/20 stratified split. The test set has 800 la
 
 ## Run the Project
 
-Install the project and development dependencies with `uv`, then train the models:
+Install the dependencies and train the models:
 
 ```bash
-uv sync --dev
-uv run python train_models.py
+pip install -r requirements.txt
+python train_models.py
 ```
 
 Training writes `test_data.csv` and the fitted preprocessing/model artifacts under `model/`. Start the evaluation app with:
 
 ```bash
-uv run streamlit run app.py
+streamlit run app.py
 ```
 
 The app accepts a labeled CSV upload or uses the generated `test_data.csv`. It loads the selected pre-trained model and preprocessor for inference; it does not retrain models.
@@ -64,5 +64,5 @@ The app accepts a labeled CSV upload or uses the generated `test_data.csv`. It l
 Run the smoke tests with:
 
 ```bash
-uv run pytest -q
+pytest -q
 ```
