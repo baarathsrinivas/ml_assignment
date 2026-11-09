@@ -18,7 +18,7 @@ The local dataset is `data/mushrooms.csv`, based on the UCI Mushroom dataset. It
 
 ## GitHub Repository
 
-[Insert repository URL](https://github.com/<username>/<repository>)
+[https://github.com/baarathsrinivas/ml_assignment](https://github.com/baarathsrinivas/ml_assignment)
 
 ## Models and Results
 
@@ -32,17 +32,16 @@ The models were trained using an 80/20 stratified split. The test set has 800 la
 | Gaussian Naive Bayes | 0.9569 | 0.9963 | 0.9601 | 0.9569 | 0.9569 | 0.9170 |
 | Support Vector Machine | **1.0000** | **1.0000** | **1.0000** | **1.0000** | **1.0000** | **1.0000** |
 
-### Model Observations
+### Model Observations and Winner
 
-- **Logistic Regression:** Reached 0.9988 accuracy and 0.9975 MCC, with an AUC of 1.0000. Its near-perfect result shows the classes are almost linearly separable in the encoded feature space on this split.
-- **Decision Tree:** Achieved 1.0000 on all six metrics. The tree can represent categorical feature interactions and provides a comparatively interpretable decision structure.
-- **K-Nearest Neighbors:** Also achieved 1.0000 on all six metrics. Neighbor voting separates this test set perfectly after one-hot encoding, though inference cost and sensitivity to feature representation should be considered for larger or shifted data.
-- **Gaussian Naive Bayes:** Scored 0.9569 accuracy and 0.9170 MCC, below the other classifiers. The gap is consistent with the model's conditional-independence assumption being a less suitable fit for dependent mushroom attributes.
-- **Support Vector Machine:** Tied for 1.0000 on every metric. Its margin-based boundary separates the encoded test examples perfectly, but it does not outperform the simpler tied models on this split.
-
-### Winner
-
-**Overall test-set winner: Decision Tree, tied with K-Nearest Neighbors and Support Vector Machine.** All three attained 1.0000 across all six metrics, so the holdout results do not distinguish them statistically. The Decision Tree is the practical tie-breaker here because it offers a more inspectable decision structure without sacrificing measured performance. Perfect results on one random split are not proof of generalization; cross-validation and an independent external test set are recommended.
+| ML Model Name | Observation about model performance |
+| --- | --- |
+| Logistic Regression | Accuracy 0.9988, MCC 0.9975, AUC 1.0000. The near-perfect result shows the classes are almost linearly separable in the encoded feature space on this split. |
+| Decision Tree | Scored 1.0000 on all six metrics. It represents categorical feature interactions and gives a comparatively interpretable decision structure. |
+| KNN | Also 1.0000 on all six metrics. Neighbor voting separates this test set perfectly after one-hot encoding; inference cost and sensitivity to feature representation matter for larger or shifted data. |
+| Naive Bayes | Accuracy 0.9569, MCC 0.9170, below the other classifiers. The conditional-independence assumption is a less suitable fit for dependent mushroom attributes. |
+| Support Vector Machine | Tied at 1.0000 on every metric. Its margin-based boundary separates the encoded test examples perfectly, but it does not outperform the simpler tied models on this split. |
+| Overall, Winner for your dataset? | **Decision Tree**, tied with KNN and SVM at 1.0000 on all six metrics. It is the tie-breaker because it offers the most inspectable decision structure without sacrificing measured performance. One random split does not prove generalization; cross-validation and an independent external test set are recommended. |
 
 ## Run the Project
 
