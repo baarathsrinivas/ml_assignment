@@ -2,12 +2,14 @@ from __future__ import annotations
 
 from pathlib import Path
 import sys
+import warnings
 
 import joblib
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import (
     accuracy_score,
+    confusion_matrix,
     f1_score,
     matthews_corrcoef,
     precision_score,
@@ -23,6 +25,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 from imputers import DataFrameImputer
+
+warnings.filterwarnings(
+    "ignore", message="The `probability` parameter", category=FutureWarning
+)
 
 
 DATA_PATH = Path("data/mushrooms.csv")
@@ -42,7 +48,9 @@ def remove_unlabeled_rows(
 
 def coerce_numeric_columns(features: pd.DataFrame) -> pd.DataFrame:
     features = features.copy()
-    for column in features.select_dtypes(include="object").columns:
+    for column in features.columns:
+        if pd.api.types.is_numeric_dtype(features[column]):
+            continue
         numeric_values = pd.to_numeric(features[column], errors="coerce")
         if numeric_values.notna().sum() == features[column].notna().sum():
             features[column] = numeric_values
@@ -165,6 +173,7 @@ def main() -> None:
 
     metric_rows = []
     for model_name, (artifact_name, model) in models.items():
+        print(f"Training {model_name}...", flush=True)
         model.fit(X_train_processed, y_train)
         predictions = model.predict(X_test_processed)
         probabilities = model.predict_proba(X_test_processed)
@@ -184,6 +193,24 @@ def main() -> None:
                 ),
                 "MCC": matthews_corrcoef(y_test_from_csv, predictions),
             }
+        )
+        stats = metric_rows[-1]
+        print(
+            f"  {model_name} | "
+            + " | ".join(
+                f"{metric}={stats[metric]:.4f}"
+                for metric in ("Accuracy", "AUC", "Precision", "Recall", "F1", "MCC")
+            ),
+            flush=True,
+        )
+        matrix = confusion_matrix(y_test_from_csv, predictions, labels=model.classes_)
+        print(
+            pd.DataFrame(
+                matrix,
+                index=[f"actual={label}" for label in model.classes_],
+                columns=[f"predicted={label}" for label in model.classes_],
+            ).to_string(),
+            flush=True,
         )
 
     print(pd.DataFrame(metric_rows).to_markdown(index=False, floatfmt=".4f"))
